@@ -8,7 +8,6 @@ import re
 
 from netCDF4 import default_fillvals
 from netCDF4 import num2date
-import numpy as np
 import pandas as pd
 import xarray as xr
 
@@ -71,7 +70,7 @@ def find_glider_deployment_datapath(
         # Parse trajectory date
         try:
             # Convert trajectory string into a datetime object
-            trajectory_dt = pd.to_datetime(trajectory, errors="coerce")
+            trajectory_dt = parser.parse(trajectory).replace(tzinfo=pytz.UTC)
         except ValueError as e:
             logger.error(f"Error parsing trajectory date {deployment}: {e}")
             return None, None, None, None
@@ -128,43 +127,37 @@ def find_glider_deployment_location(logger, deployment, deployments_root):
     glider_regex = re.compile(r"^(.*)-(\d{8}T\d{4})")
     match = glider_regex.search(deployment)
     if match:
+        # Parse trajectory date
         try:
-            (glider, trajectory) = match.groups()
+            glider, trajectory = match.groups()
             try:
                 trajectory_dt = parser.parse(trajectory).replace(tzinfo=pytz.UTC)
             except ValueError as e:
                 logger.error(
                     "Error parsing trajectory date {:s}: {:}".format(trajectory, e)
                 )
-                trajectory_dt = None
-                data_path = None
-                deployment_location = None
+                return None
 
-            if trajectory_dt:
-                trajectory = "{:s}-{:s}".format(
-                    glider, trajectory_dt.strftime("%Y%m%dT%H%M")
+            deployment_year = "{:0.0f}".format(trajectory_dt.year)
+
+            # Create fully-qualified path to the deployment location
+            deployment_location = os.path.join(deployments_root, deployment_year, deployment)
+
+            # Check if directory exists
+            if os.path.isdir(deployment_location):
+                logger.info(f"Deployment location found: {deployment_location}")
+            else:
+                logger.warning(
+                    f"Deployment location does not exist: {deployment_location}"
                 )
-                deployment_name = os.path.join(
-                    "{:0.0f}".format(trajectory_dt.year), trajectory
-                )
-
-                # Create fully-qualified path to the deployment location
-                deployment_location = os.path.join(deployments_root, deployment_name)
-
-                if os.path.isdir(deployment_location):
-                    logger.info(f"Deployment location found: {deployment_location}")
-                else:
-                    logger.warning(
-                        f"Deployment location does not exist: {deployment_location}"
-                    )
-                    deployment_location = None
+                return None
 
         except ValueError as e:
             logger.error(f"Error parsing invalid deployment name {deployment}: {e}")
-            deployment_location = None
+            return None
     else:
         logger.error(f"Cannot pull glider name from {deployment}")
-        deployment_location = None
+        return None
 
     return deployment_location
 
