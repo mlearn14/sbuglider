@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
+from dateutil import parser
+import os
+import pytz
+import re
+
 from netCDF4 import default_fillvals
 from netCDF4 import num2date
 import numpy as np
 import pandas as pd
 import xarray as xr
-
-from dateutil import parser
-import os
-import pytz
-import re
 
 
 def convert_epoch_ts(data):
