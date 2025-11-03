@@ -10,7 +10,7 @@ def logfile_basename() -> str:
     """Returns the base qc log file name."""
     # originally written by lgarzio: https://github.com/lgarzio/ruglider_processing/blob/master/ruglider_processing/loggers.py
     user: str = pwd.getpwuid(os.getuid())[0]
-    return f"/home/{user}/logs/{user}-glider_qc.log"
+    return f"/home/SOMAS_Glider/logs/{user}-glider_qc.log"
 
 
 def logfile_deploymentname(deployment: str, mode: str, fname: str) -> str:
