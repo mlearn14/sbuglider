@@ -2,6 +2,7 @@
 
 from dateutil import parser
 import os
+import logging
 import pytz
 import re
 
@@ -39,7 +40,9 @@ def convert_epoch_ts(data):
     return time
 
 
-def find_glider_deployment_datapath(logger, deployment, deployments_root, mode):
+def find_glider_deployment_datapath(
+    logger, deployment, deployments_root, mode
+) -> tuple[str, str, str, str]:
     """
     Find the glider deployment binary data path.
 
@@ -51,97 +54,61 @@ def find_glider_deployment_datapath(logger, deployment, deployments_root, mode):
     Returns
     ----------
         data_path (str): glider deployment binary data path
-        deployment_location (str): glider deployment location
+        nc_outpath (str): glider deployment raw netcdf output path
+        outdir (str): output directory for data queued for qc processing
+        deployment_location (str): fully qualified path to the deployment directory location
     """
     # originally written by lgarzio: https://github.com/lgarzio/ruglider_processing/blob/master/ruglider_processing/common.py
+
+    # Pre-compile regex pattern to extract glider and trajectory from deployment name
     glider_regex = re.compile(r"^(.*)-(\d{8}T\d{4})")
+
+    # Extract glider and trajectory from deployment name
     match = glider_regex.search(deployment)
     if match:
+        glider, trajectory = match.groups()
+
+        # Parse trajectory date
         try:
-            (glider, trajectory) = match.groups()
-            try:
-                trajectory_dt = parser.parse(trajectory).replace(tzinfo=pytz.UTC)
-            except ValueError as e:
-                logger.error(
-                    "Error parsing trajectory date {:s}: {:}".format(trajectory, e)
-                )
-                trajectory_dt = None
-                data_path = None
-                deployment_location = None
-
-            if trajectory_dt:
-                trajectory = "{:s}-{:s}".format(
-                    glider, trajectory_dt.strftime("%Y%m%dT%H%M")
-                )
-                deployment_name = os.path.join(
-                    "{:0.0f}".format(trajectory_dt.year), trajectory
-                )
-
-                # Create fully-qualified path to the deployment location
-                deployment_location = os.path.join(deployments_root, deployment_name)
-                if mode == "delayed":
-                    modemap = "debd"
-                elif mode == "rt":
-                    modemap = "stbd"
-                else:
-                    logger.warning(
-                        "{:s} invalid mode provided: {:s}".format(trajectory, mode)
-                    )
-                if os.path.isdir(deployment_location):
-                    # Set the deployment binary data path
-                    data_path = os.path.join(
-                        deployment_location, "data", "in", "binary", modemap
-                    )
-
-                    # Set the deployment raw netcdf data path
-                    nc_outpath = os.path.join(
-                        deployment_location, "data", "in", "rawnc", modemap
-                    )
-
-                    # Set the deployment output file directory
-                    outdir = os.path.join(
-                        deployment_location, "data", "out", mode, "qc_queue"
-                    )
-
-                    if not os.path.isdir(data_path):
-                        logger.warning(
-                            f"{trajectory} data directory not found: {data_path}"
-                        )
-                        data_path = None
-                        nc_outpath = None
-                        deployment_location = None
-                        outdir = None
-                    if not os.path.isdir(nc_outpath):
-                        logger.warning(
-                            f"{trajectory} data directory not found: {nc_outpath}"
-                        )
-                        data_path = None
-                        nc_outpath = None
-                        deployment_location = None
-                        outdir = None
-                else:
-                    logger.warning(
-                        f"Deployment location does not exist: {deployment_location}"
-                    )
-                    data_path = None
-                    nc_outpath = None
-                    deployment_location = None
-                    outdir = None
-
+            # Convert trajectory string into a datetime object
+            trajectory_dt = pd.to_datetime(trajectory, errors="coerce")
         except ValueError as e:
-            logger.error(f"Error parsing invalid deployment name {deployment}: {e}")
-            data_path = None
-            nc_outpath = None
-            deployment_location = None
-            outdir = None
+            logger.error(f"Error parsing trajectory date {deployment}: {e}")
+            return None, None, None, None
+
+        # Create fully-qualified path to the deployment location
+        deployment_year = "{:0.0f}".format(trajectory_dt.year)
+        deployment_location = os.path.join(
+            deployments_root, deployment_year, deployment
+        )
+
+        # Set the deployment binary data path
+        if mode == "delayed":
+            modemap = "debd"
+        elif mode == "rt":
+            modemap = "stbd"
+        else:
+            logger.warning(f"{deployment} invalid mode provided: {mode}")
+            return None, None, None, None
+
+        # Create fully-qualified path to the binary data
+        data_path = os.path.join(deployment_location, "data", "in", "binary", modemap)
+
+        # Check if directory exists
+        if not os.path.isdir(data_path):
+            logger.warning(f"{deployment} data directory not found: {data_path}")
+            return None, None, None, None
+
+        # Set the deployment raw netcdf data path
+        nc_outpath = os.path.join(deployment_location, "data", "in", "rawnc", modemap)
+
+        # Set the deployment output file directory
+        outdir = os.path.join(deployment_location, "data", "out", mode, "qc_queue")
+
+        return data_path, nc_outpath, outdir, deployment_location
     else:
         logger.error(f"Cannot pull glider name from {deployment}")
-        data_path = None
-        nc_outpath = None
-        deployment_location = None
-        outdir = None
-
-    return data_path, nc_outpath, outdir, deployment_location
+        return None, None, None, None
 
 
 def find_glider_deployment_location(logger, deployment, deployments_root):
@@ -202,7 +169,17 @@ def find_glider_deployment_location(logger, deployment, deployments_root):
     return deployment_location
 
 
-def find_glider_deployments_rootdir(logger, test):
+def find_glider_deployments_rootdir(
+    logger: logging.Logger, test: bool
+) -> tuple[str, str]:
+    """
+    Returns the glider deployment directory from the environment variable *$GLIDER_DATA_HOME* as well as the environment variable itself.
+
+    Returns
+    ----------
+        data_home (str): The environment variable *$GLIDER_DATA_HOME*.
+        deployments_root (str): Root directory for glider deployments.
+    """
     # originally written by lgarzio: https://github.com/lgarzio/ruglider_processing/blob/master/ruglider_processing/common.py
     # Find the glider deployments root directory
     if test:
