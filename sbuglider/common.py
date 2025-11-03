@@ -141,7 +141,9 @@ def find_glider_deployment_location(logger, deployment, deployments_root):
             deployment_year = "{:0.0f}".format(trajectory_dt.year)
 
             # Create fully-qualified path to the deployment location
-            deployment_location = os.path.join(deployments_root, deployment_year, deployment)
+            deployment_location = os.path.join(
+                deployments_root, deployment_year, deployment
+            )
 
             # Check if directory exists
             if os.path.isdir(deployment_location):
