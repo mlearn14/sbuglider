@@ -43,6 +43,7 @@ def main(args):
                 )
             )
 
+            # check if binarydir, rawncdir, deployment_location exist
             if not os.path.isdir(binarydir):
                 logging_base.error(f"{deployment} binary file data directory not found")
                 continue
@@ -59,6 +60,7 @@ def main(args):
                 )
                 continue
 
+            # set up logger
             logfilename = logfile_deploymentname(
                 deployment, mode, "proc_binary_to_rawnc"
             )
@@ -108,6 +110,7 @@ def main(args):
             flightcount = len(
                 [f for f in os.listdir(binarydir) if f.endswith(f".{glidersuffix}")]
             )
+            # TODO: might change this to have dbdreader implementation?
             slocum.binary_to_rawnc(
                 binarydir,
                 rawncdir,
@@ -147,7 +150,6 @@ if __name__ == "__main__":
 
     arg_parser.add_argument(
         "deployments",
-        required=True,
         nargs="+",
         help="Glider deployment name(s) formatted as glider-YYYYmmddTHHMM",
     )
