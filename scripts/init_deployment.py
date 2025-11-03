@@ -44,8 +44,10 @@ def main(args):
 
             # get subdirectory paths
             config_dir = os.path.join(deployment_dir, "config", "proc")
-            binary_dir = os.path.join(deployment_dir, "data", "in", "binary")
-            rawnc_dir = os.path.join(deployment_dir, "data", "in", "rawnc")
+            bin_stbd_dir = os.path.join(deployment_dir, "data", "in", "binary", "stbd")
+            bin_debd_dir = os.path.join(deployment_dir, "data", "in", "binary", "debd")
+            raw_stbd_dir = os.path.join(deployment_dir, "data", "in", "rawnc", "stbd")
+            raw_debd_dir = os.path.join(deployment_dir, "data", "in", "rawnc", "debd")
             delayed_dir = os.path.join(
                 deployment_dir, "data", "out", "delayed", "qc_queue"
             )
@@ -55,8 +57,10 @@ def main(args):
             # create the deployment subdirectories
             try:
                 os.makedirs(config_dir, exist_ok=True)
-                os.makedirs(binary_dir, exist_ok=True)
-                os.makedirs(rawnc_dir, exist_ok=True)
+                os.makedirs(bin_stbd_dir, exist_ok=True)
+                os.makedirs(bin_debd_dir, exist_ok=True)
+                os.makedirs(raw_stbd_dir, exist_ok=True)
+                os.makedirs(raw_debd_dir, exist_ok=True)
                 os.makedirs(delayed_dir, exist_ok=True)
                 os.makedirs(rt_dir, exist_ok=True)
                 os.makedirs(proclog_dir, exist_ok=True)
