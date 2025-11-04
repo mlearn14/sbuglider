@@ -20,6 +20,7 @@ def main(args):
     deployments: list[str] = args.deployments
     loglevel: str = args.loglevel.upper()
     mode: str = args.mode.lower()
+    compression: bool = args.compression
     test: bool = args.test
 
     # set up the logger
@@ -87,20 +88,28 @@ def main(args):
             if mode == "rt":
                 scisuffix = "tbd"
                 glidersuffix = "sbd"
+                search = "*.[s|t]bd"
             elif mode == "delayed":
                 scisuffix = "ebd"
                 glidersuffix = "dbd"
+                search = "*.[d|e]bd"
             else:
                 logging.warning(f"Invalid mode provided: {mode}")
                 continue
 
-            logging.info(f"Processing: {deployment} {mode}")
+            if compression:
+                scisuffix = scisuffix.replace("b", "c")
+                glidersuffix = glidersuffix.replace("b", "c")
+                search = search.replace("b", "c")
+
+            logging.info(f"Processing: {deployment}-{mode}")
 
             # convert binary *.T/EBD and *.S/DBD into *.t/ebd.nc and *.s/dbd.nc netcdf files.
             logging.info(
-                f"Converting binary *.{scisuffix} and *.{glidersuffix} into *.{scisuffix}.nc and *.{glidersuffix}.nc netcdf files"
+                f"Converting binary {search} into merged *.nc netcdf files"
             )
             logging.info(f"Binary filepath: {binarydir}")
+            logging.info(f"Cache filepath: {cacdir}")
             logging.info(f"Output filepath: {rawncdir}")
 
             # log the number of binary files to be converted
@@ -110,30 +119,19 @@ def main(args):
             flightcount = len(
                 [f for f in os.listdir(binarydir) if f.endswith(f".{glidersuffix}")]
             )
-            # TODO: might change this to have dbdreader implementation?
-            slocum.binary_to_rawnc(
-                binarydir,
-                rawncdir,
-                cacdir,
-                sensorlist,
-                deploymentyaml,
-                incremental=True,
-                scisuffix=scisuffix,
-                glidersuffix=glidersuffix,
+
+            slocum.binary_to_profiles(
+                indir=binarydir,
+                cachedir=cacdir,
+                outdir=rawncdir,
+                deploymentyaml=deploymentyaml,
+                search=search,
             )
 
             # log how many files were successfully converted from binary to *.nc
-            oscicount = len(
-                [f for f in os.listdir(rawncdir) if f.endswith(f".{scisuffix}.nc")]
-            )
-            oflightcount = len(
-                [f for f in os.listdir(rawncdir) if f.endswith(f".{glidersuffix}.nc")]
-            )
+            ocount = len([f for f in os.listdir(rawncdir) if f.endswith(".nc")])
             logging.info(
-                f"Successfully converted {oscicount} of {scicount} science binary files with suffix *.{scisuffix}"
-            )
-            logging.info(
-                f"Successfully converted {oflightcount} of {flightcount} engineering binary files with suffix *.{glidersuffix}"
+                f"Successfully merged {scicount} science binary files and {flightcount} engineering binary files into {ocount} raw netcdf files"
             )
             logging.info(f"Finished converting binary files to raw netcdf files")
 
@@ -160,6 +158,13 @@ if __name__ == "__main__":
         help="Dataset mode: real-time (rt) or delayed-mode (delayed)",
         choices=["rt", "delayed"],
         default="rt",
+    )
+
+    arg_parser.add_argument(
+        "-c",
+        "--compression",
+        help="Compression mode: .*bd or .*cd",
+        action="store_true",
     )
 
     arg_parser.add_argument(
