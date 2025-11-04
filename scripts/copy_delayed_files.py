@@ -7,7 +7,7 @@ import sys
 import os
 
 import sbuglider.common as cf
-from sbuglider.loggers import logfile_basename, setup_loggers
+from sbuglider.loggers import logfile_basename, setup_logger
 
 
 def main(args):
@@ -18,7 +18,7 @@ def main(args):
 
     # set up the logger
     logfile_base = logfile_basename()
-    logging_base = setup_loggers("logging_base", loglevel, logfile_base)
+    logging_base = setup_logger("logging_base", loglevel, logfile_base)
 
     data_home = os.getenv("GLIDER_DATA_HOME")
 
@@ -42,7 +42,7 @@ def main(args):
     deployment_dir = cf.find_glider_deployment_location(
         logging_base, deployment, deployment_root
     )
-    binary_dir = os.path.join(deployment_dir, "data", "in", "binary")
+    binary_dir = os.path.join(deployment_dir, "data", "in", "binary", "debd")
 
     # copy files
     try:
