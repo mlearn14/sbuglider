@@ -8,7 +8,7 @@ import pyglider.ncprocess as ncprocess
 import pyglider.slocum as slocum
 import pyglider.utils as pgutils
 import sbuglider.common as cf
-from sbuglider.loggers import logfile_basename, logfile_deploymentname, setup_loggers
+from sbuglider.loggers import logfile_basename, logfile_deploymentname, setup_logger
 
 
 def main(args):
@@ -24,7 +24,7 @@ def main(args):
 
     # set up the logger
     logfile_base = logfile_basename()
-    logging_base = setup_loggers("logging_base", loglevel, logfile_base)
+    logging_base = setup_logger("logging_base", loglevel, logfile_base)
 
     # get the deployment and cache directories
     data_home, deployments_root = cf.find_glider_deployments_rootdir(logging_base, test)
@@ -65,7 +65,7 @@ def main(args):
                 deployment, mode, "proc_binary_to_rawnc"
             )
             logFile = os.path.join(deployment_location, "proc-logs", logfilename)
-            logging = setup_loggers("logging", loglevel, logFile)
+            logging = setup_logger("logging", loglevel, logFile)
 
             # Set the deployment configuration path
             deployment_config_root = os.path.join(deployment_location, "config", "proc")

@@ -20,7 +20,7 @@ def logfile_deploymentname(deployment: str, mode: str, fname: str) -> str:
     return f"{user}-{datetime.now().strftime('%Y%m%d')}-{deployment}-{mode}-{fname}.log"
 
 
-def setup_loggers(name: str, loglevel: str, logfile: str):
+def setup_logger(name: str, loglevel: str, logfile: str):
     """Sets up and retruns a foramtted logger object."""
     # originally written by lgarzio: https://github.com/lgarzio/ruglider_processing/blob/master/ruglider_processing/loggers.py
     logger = logging.getLogger(name)
