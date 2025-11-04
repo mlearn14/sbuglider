@@ -1,0 +1,110 @@
+[
+    {
+        "attrs": {
+            "calibration_date": "2022-10-13",
+            "comment": "",
+            "description": "A profiling CTD instrument designed specifically for installation on Slocum autonomous gliders. It measures conductivity, temperature and pressure for use in oceanic research, updating ocean models, assessing sensor stability on moored observatories, and leveraging data collection opportunities from operational vehicle missions. It outputs real-time data in decimal S/m, degC and decibars, or raw decimal counts. It is externally powered and continuously pumped, and can operate in both continuous sampling or polled sampling modes. It features an expendable anti-foulant device offering bio-fouling protection, and is supplied with Seasoft V2 Windows software for setup and data processing. The pressure sensor with temperature compensation is available in 4 strain-gauge ranges; 0-100; 100-350; 350-1000; 1000-2000 metres. It measures conductivity from 0-9 S/m at a resolution of 0.00001 S/m, temperature from -5 to +42 degC at a resolution of 0.001 degC, and pressure up to 2000 m (dependant on the range chosen), at a resolution of 0.002 percent of full scale range.",
+            "factory_calibrated": "2022-10-13",
+            "long_name": "Sea-Bird Slocum Glider GPCTD",
+            "maker": "Sea-Bird Scientific",
+            "maker_vocabulary": "https://vocab.nerc.ac.uk/collection/B75/current/ORG00226/, https://vocab.nerc.ac.uk/collection/L35/current/MAN0013/",
+            "model": "Sea-Bird Slocum Glider Payload {GPCTD} CTD",
+            "model_vocabulary": "https://vocab.nerc.ac.uk/collection/L22/current/TOOL1492/",
+            "owner": "Stony Brook University",
+            "references": "",
+            "serial_number": "9919",
+            "type": "CTD,salinity sensor,sensor model,water temperature sensor,water pressure sensor",
+            "type_vocabulary": "http://vocab.nerc.ac.uk/collection/L05/current/130/,http://vocab.nerc.ac.uk/collection/L05/current/350/,http://vocab.nerc.ac.uk/collection/L19/current/SDNKG17/,http://vocab.nerc.ac.uk/collection/L05/current/134/,http://vocab.nerc.ac.uk/collection/L05/current/WPS/",
+            "user_calibrated": ""
+        },
+        "cfg_file": "/home/glideradm/doco/glideradm/configs/instruments/9997-ctd.yml",
+        "nc_var_name": "instrument_ctd",
+        "type": "i4"
+    },
+    {
+        "attrs": {
+            "calibration_date": "1970-01-01",
+            "comment": "No calibration date. No NVS instrument definition (https://vocab.nerc.ac.uk/collection/L22/current/) as of 2023-02-24.",
+            "description": "The digital acoustic monitoring instrument or DMON is a passive acoustic instrument that is capable of recording and processing audio in realtime. The developers have implemented a low-frequency detection and classification system (LFDCS) on the DMON to identify marine mammal calls from a variety of autonomous platforms, including gliders, profiling floats, and moorings. The LFDCS produces pitch tracks of sounds, which describe changes in the frequency (pitch) of a call over time. While automated software can roughly identify calls, for best results scientists typically examine spectrograms to identify marine mammal calls and pitch tracks are derived from spectrograms.",
+            "factory_calibrated": "1970-01-01",
+            "long_name": "WHOI Digital Acoustic Monitoring Instrument DMON",
+            "maker": "Mark Baumgartner, Woods Hole Oceanographic Institution",
+            "maker_vocabulary": "https://vocab.nerc.ac.uk/collection/L35/current/MAN0064/",
+            "model": "DMON2",
+            "owner": "Stony Brook University",
+            "references": "http://dcs.whoi.edu/, https://www.whoi.edu/cms/files/JASMAN12952889_85804.pdf, https://www.whoi.edu/fileserver.do?id=163064&pt=2&p=9906",
+            "serial_number": "042",
+            "type": "hydrophones",
+            "type_vocabulary": "https://vocab.nerc.ac.uk/collection/L05/current/369/",
+            "user_calibrated": ""
+        },
+        "cfg_file": "/home/glideradm/doco/glideradm/configs/instruments/2277-suna.yml",
+        "nc_var_name": "instrument_dmon",
+        "type": "i4"
+    },
+    {
+        "attrs": {
+            "calibration_date": "2022-07-14",
+            "comment": "Chlorophyll a,beta700nm,CDOM",
+            "description": "A variant of the ECO Puck Triplet (http://vocab.nerc.ac.uk/collection/L22/current/TOOL0673/). It is a three-optical-sensor, user-defined instrument that carries a chlorophyll-a fluorometer, FDOM fluorometer and scattering meter. ECO Pucks are real-time only sensors as they are integrated onto the OEM platform that provides power and data handling. The SLC designation signifies this is a third generation model that is specific for integration into Slocum gliders with a dry science bay. The fluorometers and scattering meter are single wavelength sensors. The model is fitted with an added copper faceplate for bio-fouling mitigation and is depth-rated to 1000 m.",
+            "factory_calibrated": "2022-07-14",
+            "long_name": "ECO Puck Triplet FLBBCD-SLC",
+            "maker": "WET Labs,Sea-Bird Scientific",
+            "maker_vocabulary": "http://vocab.nerc.ac.uk/collection/L35/current/MAN0026/, http://vocab.nerc.ac.uk/collection/B75/current/ORG00226/",
+            "model": "WETLabs ECO Puck Triplet FLBBCD-SLC scattering fluorescence sensor",
+            "model_vocabulary": "https://vocab.nerc.ac.uk/collection/L22/current/TOOL1312/",
+            "owner": "Stony Brook University",
+            "references": "",
+            "serial_number": "7661",
+            "type": "sensor_model,optical backscatter sensor,fluorometer",
+            "type_vocabulary": "http://vocab.nerc.ac.uk/collection/L19/current/SDNKG17/, http://vocab.nerc.ac.uk/collection/L05/current/123/,http://vocab.nerc.ac.uk/collection/L05/current/113/",
+            "user_calibrated": ""
+        },
+        "cfg_file": "/home/glideradm/doco/glideradm/configs/instruments/8639-flbbcdslc.yml",
+        "nc_var_name": "instrument_flbbcdslc",
+        "type": "i4"
+    },
+    {
+        "attrs": {
+            "calibration_date": "2022-06-20",
+            "comment": "Model 4831",
+            "description": "A dissolved oxygen sensor which provides analogue (0-5V) and digital output (RS-232) to third party data loggers, gliders and floats. Measurement based on the ability of selected substances to act as dynamic fluorescence quenchers. The fluorescent indicator is a special platinum porphyrin complex embedded in a gas permeable foil that is exposed to the surrounding water. In this standard model, a black optical isolation coating protects the complex from sunlight and fluorescent particles in the water. This sensing foil is attached to a window providing optical access for the measuring system from inside a watertight housing. The foil is excited by modulated blue light, and the phase of a returned red light is measured. For improved stability the 4831 optode also performs a reference phase reading by use of a red LED that does not produce fluorescence in the foil. This model is fitted with a standard sensing foil. By linearizing and temperature compensating, with an incorporated temperature sensor, the absolute O2 concentration can be determined. Accuracy +/- 1.5% or 2uM; precision +/- 0.2 uM.",
+            "factory_calibrated": "2022-06-20",
+            "long_name": "AA Optode 4831",
+            "maker": "Aanderaa Data Instruments AS",
+            "maker_vocabulary": "http://vocab.nerc.ac.uk/collection/B75/current/ORG00228/,http://vocab.nerc.ac.uk/collection/L35/current/MAN0007/",
+            "model": "Aanderaa Oxygen Optode 4831",
+            "model_vocabulary": "http://vocab.nerc.ac.uk/collection/L22/current/TOOL1239/",
+            "owner": "Stony Brook University",
+            "references": "",
+            "serial_number": "1038",
+            "type": "sensor_model,dissolved gas sensors",
+            "type_vocabulary": "http://vocab.nerc.ac.uk/collection/L19/current/SDNKG17/, http://vocab.nerc.ac.uk/collection/L05/current/351/",
+            "user_calibrated": ""
+        },
+        "cfg_file": "/home/glideradm/doco/glideradm/configs/instruments/1138-optode.yml",
+        "nc_var_name": "instrument_optode",
+        "type": "i4"
+    },
+    {
+        "attrs": {
+            "calibration_date": "2022-11-08",
+            "comment": "pH sensor. no model vocabulary",
+            "description": "The original design of a deep ISFET (Ion Sensitive Field Effect Transistor) pH sensor (Deep-Sea DuraFET developed by MBARI, Johnson et al 2016) was modified by Sea-Bird Scientific and integrated into a Slocum Webb glider. This pH sensor was reconfigured to fit into an existing glider CTD port utilizing a shared pumped system to pull seawater in past both the pH and CTD sensor elements. The sensor measures pH with a range of 6.5 to 9.0, has an accuracy to +/-0.05 pH units, and precision of 0.001 pH units. It is calibrated in temperatures ranging from 5 deg C to 35 deg C and has a depth rating of 2000 m.",
+            "factory_calibrated": "2022-11-08",
+            "long_name": "Deep ISFET Glider-based pH Sensor",
+            "maker": "Sea-Bird Scientific",
+            "maker_vocabulary": "https://vocab.nerc.ac.uk/collection/B75/current/ORG00226/, https://vocab.nerc.ac.uk/collection/L35/current/MAN0013/",
+            "model": "Deep ISFET Glider-based pH Sensor",
+            "owner": "Stony Brook University",
+            "references": "Saba et al 2019 https://doi.org/10.3389/fmars.2019.00664, Johnson et al 2016 https://doi.org/10.1021/acs.analchem.5b04653",
+            "serial_number": "12180",
+            "type": "pH sensors",
+            "type_vocabulary": "https://vocab.nerc.ac.uk/collection/L05/current/355/",
+            "user_calibrated": ""
+        },
+        "cfg_file": "/home/glideradm/doco/glideradm/configs/instruments/1138-optode.yml",
+        "nc_var_name": "instrument_pH",
+        "type": "i4"
+    }
+]
