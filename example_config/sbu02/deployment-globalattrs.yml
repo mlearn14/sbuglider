@@ -1,0 +1,13 @@
+acknowledgment: This deployment is supported by NY Department of Environmental Conservation as part of its Ocean Indicators Project at Stony Brook University
+comment: Deployed by Charles Flagg, Lucas Merlo, and Captain Chris Winsor on The RV Parker out of Shinnecock, NY.
+contributor_name: Charlie Flagg, Jacqueline McSweeney, John Kerfoot, Lori Garzio, Laura Nazzaro
+contributor_role: Principal Investigator, Principal Investigator, Data Management, Data Management,Data Management
+deployment: sbu02-20250716T1543
+gts_ingest: 'True'
+institution: Stony Brook University
+program: New York State DEC supported by MAB Indicators Project
+project: New York State DEC supported by MAB Indicators Project
+infoUrl: http://po.msrc.sunysb.edu/OGP, https://rucool.marine.rutgers.edu, https://robots4whales.whoi.edu
+references: https://www.somas.stonybrook.edu/, https://www.dec.ny.gov/
+sea_name: Mid-Atlantic Bight
+summary: This project is conducting seasonal deployments to monitor physical conditions and investigate carbonate chemistry and ocean acidification in the Mid-Atlantic Bight. The glider is equipped with CTD/pH sensor, ECO-Puck, dissolved oxygen sensor, and a DMON passive acoustics receiver. Marine mammal detections are shared in real-time at https://robots4whales.whoi.edu/.
