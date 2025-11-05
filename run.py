@@ -18,7 +18,6 @@ def main(args):
     init_deployment.main(args)
 
     # copy over delayed mode files
-    print(args.mode)
     if args.mode == "delayed":
         copy_delayed_files.main(args)
 
