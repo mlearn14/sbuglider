@@ -105,9 +105,7 @@ def main(args):
             logging.info(f"Processing: {deployment}-{mode}")
 
             # convert binary *.T/EBD and *.S/DBD into *.t/ebd.nc and *.s/dbd.nc netcdf files.
-            logging.info(
-                f"Converting binary {search} into merged *.nc netcdf files"
-            )
+            logging.info(f"Converting binary {search} into merged *.nc netcdf files")
             logging.info(f"Binary filepath: {binarydir}")
             logging.info(f"Cache filepath: {cacdir}")
             logging.info(f"Output filepath: {rawncdir}")
@@ -126,6 +124,7 @@ def main(args):
                 outdir=rawncdir,
                 deploymentyaml=deploymentyaml,
                 search=search,
+                logger=logging,
             )
 
             # log how many files were successfully converted from binary to *.nc
