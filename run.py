@@ -66,6 +66,13 @@ if __name__ == "__main__":
         default="info",
     )
 
+    arg_parser.add_argument(
+        "-test",
+        "--test",
+        help="Point to the environment variable key GLIDER_DATA_HOME_TEST for testing.",
+        action="store_true",
+    )
+
     args = arg_parser.parse_args()
 
     sys.exit(main(args))
