@@ -3,10 +3,13 @@
 import argparse
 import sys
 
-import bin2raw
-import copy_delayed_files
-import generate_deploymentyaml
-import init_deployment
+from scripts import (
+    init_deployment,
+    copy_delayed_files,
+    # copy_config_files,
+    generate_deploymentyaml,
+    bin2raw,
+)
 
 
 def main(args):
@@ -15,6 +18,7 @@ def main(args):
     init_deployment.main(args)
 
     # copy over delayed mode files
+    print(args.mode)
     if args.mode == "delayed":
         copy_delayed_files.main(args)
 
