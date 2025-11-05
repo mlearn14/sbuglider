@@ -69,7 +69,6 @@ def main(args):
                 sys.exit(1)
 
             logging_base.info(f"Initialized deployment: {deployment}")
-            sys.exit(0)
         else:
             logging_base.error(f"Invalid deployment name: {deployment}")
             sys.exit(1)
