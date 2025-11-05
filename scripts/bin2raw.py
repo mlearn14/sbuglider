@@ -124,7 +124,7 @@ def main(args):
                 outdir=rawncdir,
                 deploymentyaml=deploymentyaml,
                 search=search,
-                logger=logging,
+                _log=logging,
             )
 
             # log how many files were successfully converted from binary to *.nc
