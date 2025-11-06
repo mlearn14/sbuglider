@@ -16,19 +16,28 @@ def main(args):
 
     # initialize deployment directory structure
     init_deployment.main(args)
+    print("Deployment directory structure initialized.")
 
     # copy over delayed mode files
     if args.mode == "delayed":
         copy_delayed_files.main(args)
+        print("Delayed mode files copied.")
 
     # check if config files are present
     # TODO: add script to check for config files
 
     # create deployment yaml
     generate_deploymentyaml.main(args)
+    print("Deployment yaml created.")
 
     # convert binary data to raw netcdfs
+    print("Converting binary data to raw netcdfs...", end=" ")
     bin2raw.main(args)
+    print("Done!")
+
+    # TODO: qc
+
+    return 0
 
 
 if __name__ == "__main__":
