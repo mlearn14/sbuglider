@@ -20,7 +20,6 @@ def main(args):
     deployments: list[str] = args.deployments
     loglevel: str = args.loglevel.upper()
     mode: str = args.mode.lower()
-    compression: bool = args.compression
     test: bool = args.test
 
     # set up the logger
@@ -95,11 +94,6 @@ def main(args):
                 logging.warning(f"Invalid mode provided: {mode}")
                 continue
 
-            if compression:
-                scisuffix = scisuffix.replace("b", "c")
-                glidersuffix = glidersuffix.replace("b", "c")
-                search = search.replace("b", "c")
-
             logging.info(f"Processing: {deployment}-{mode}")
 
             # convert binary *.T/EBD and *.S/DBD into *.t/ebd.nc and *.s/dbd.nc netcdf files.
@@ -155,13 +149,6 @@ if __name__ == "__main__":
         help="Dataset mode: real-time (rt) or delayed-mode (delayed)",
         choices=["rt", "delayed"],
         default="rt",
-    )
-
-    arg_parser.add_argument(
-        "-c",
-        "--compression",
-        help="Compression mode: .*bd or .*cd",
-        action="store_true",
     )
 
     arg_parser.add_argument(

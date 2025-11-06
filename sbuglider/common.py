@@ -5,6 +5,7 @@ import os
 import logging
 import pytz
 import re
+import subprocess
 
 from netCDF4 import default_fillvals
 from netCDF4 import num2date
@@ -37,6 +38,47 @@ def convert_epoch_ts(data):
         )
 
     return time
+
+
+def decompress_dbds(
+    logger,
+    indir,
+    outdir=None,
+    script="/home/gsb/projects/slocum/bin2ascii/decompress_dbds.sh",
+):
+    """
+    Decompresses each dinkum compressed data (*.*cd) file in the provided directory. Each decompressed file is written to the same directory unless specified.
+
+    Calls John Kerfoot's decompress_dbds.sh script.
+
+    Parameters
+    ----------
+        logger (Logger): logger object
+        indir (str): input directory
+        outdir (str): output directory
+        script (str): absolute path to decompress_dbds.sh
+    """
+    repo_root = os.path.dirname(os.path.dirname(script))
+    script_relpath = os.path.relpath(script, repo_root)
+
+    if outdir is None:
+        outdir = indir
+
+    cmd = f"{script_relpath} -o {outdir} {indir}/*.*cd"
+    result = subprocess.run(
+        cmd,
+        cwd=repo_root,
+        shell=True,
+        capture_output=True,
+        text=True,
+    )
+
+    logger.info(f"stdout: {result.stdout}")
+    logger.error(f"stderr: {result.stderr}")
+    if result.returncode != 0:
+        logger.error(f"Decompression failed with code {result.returncode}")
+    else:
+        logger.info("Decompression completed successfully.")
 
 
 def find_glider_deployment_datapath(

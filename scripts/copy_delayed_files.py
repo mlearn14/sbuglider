@@ -5,7 +5,6 @@ import glob
 import shutil
 import sys
 import os
-from tabnanny import check
 
 import sbuglider.common as cf
 from sbuglider.loggers import logfile_basename, setup_logger
@@ -30,7 +29,6 @@ def _check_files(
 
 def main(args):
     """Copy delayed mode binary files into its proper subdirectory"""
-    # FIXME: Add support for multiple deployments!!!
     deployments = args.deployments
     loglevel = args.loglevel.upper()
     compression = args.compression
@@ -51,24 +49,6 @@ def main(args):
         if not os.path.isdir(science_dir):
             logging_base.error(f"Science directory {science_dir} not found")
 
-        # get suffixes
-        u_flight_suffix = "*.dbd"
-        u_sci_suffix = "*.ebd"
-
-        # check if files exist
-        if compression:
-            flight_suffix = "*.dcd"
-            sci_suffix = "*.ecd"
-            flight_files, science_files = _check_files(
-                flight_dir, flight_suffix, science_dir, sci_suffix, logging_base
-            )
-        else:
-            flight_suffix = "*.dbd"
-            sci_suffix = "*.ebd"
-            flight_files, science_files = _check_files(
-                flight_dir, flight_suffix, science_dir, sci_suffix, logging_base
-            )
-
         # get binary directory
         deployment_root = os.path.join(data_home, "deployments")
         deployment_dir = cf.find_glider_deployment_location(
@@ -80,17 +60,39 @@ def main(args):
         if not os.path.isdir(deployment_dir):
             logging_base.error(f"Binary directory {deployment_dir} not found")
 
-        # copy files
-        try:
-            ffiles = [shutil.copy(f, binary_dir) for f in flight_files]
-            sfiles = [shutil.copy(f, binary_dir) for f in science_files]
-        except shutil.Error as e:
-            logging_base.error(f"Error copying files: {e}")
-            sys.exit(1)
+        # check if files exist
+        if compression:
+            flight_suffix = "*.dcd"
+            sci_suffix = "*.ecd"
+            flight_files, science_files = _check_files(
+                flight_dir, flight_suffix, science_dir, sci_suffix, logging_base
+            )
 
-        logging_base.info(
-            f"Copied {len(ffiles)} flight and {len(sfiles)} science files from to {binary_dir}"
-        )
+            # decompress files and send to binary directory
+            cf.decompress_dbds(logging_base, flight_dir, binary_dir)
+            cf.decompress_dbds(logging_base, science_dir, binary_dir)
+
+            logging_base.info(
+                f"Decompressed and wrote {len(flight_files)} flight and {len(science_files)} science files to {binary_dir}"
+            )
+        else:
+            flight_suffix = "*.dbd"
+            sci_suffix = "*.ebd"
+            flight_files, science_files = _check_files(
+                flight_dir, flight_suffix, science_dir, sci_suffix, logging_base
+            )
+
+            # copy files
+            try:
+                ffiles = [shutil.copy(f, binary_dir) for f in flight_files]
+                sfiles = [shutil.copy(f, binary_dir) for f in science_files]
+            except shutil.Error as e:
+                logging_base.error(f"Error copying files: {e}")
+                sys.exit(1)
+
+            logging_base.info(
+                f"Copied {len(ffiles)} flight and {len(sfiles)} science files from to {binary_dir}"
+            )
 
 
 if __name__ == "__main__":
@@ -99,8 +101,9 @@ if __name__ == "__main__":
     )
 
     arg_parser.add_argument(
-        "deployment",
-        help="Glider deployment name formatted as glider-YYYYmmddTHHMM",
+        "deployments",
+        nargs="+",
+        help="Glider deployment name(s) formatted as glider-YYYYmmddTHHMM",
     )
 
     arg_parser.add_argument(
