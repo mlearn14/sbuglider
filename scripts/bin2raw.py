@@ -85,11 +85,11 @@ def main(args):
             if mode == "rt":
                 scisuffix = "tbd"
                 glidersuffix = "sbd"
-                search = "*.[s|t]bd"
+                # search = "*.[s|t]bd"
             elif mode == "delayed":
                 scisuffix = "ebd"
                 glidersuffix = "dbd"
-                search = "*.[d|e]bd"
+                # search = "*.[d|e]bd"
             else:
                 logging.warning(f"Invalid mode provided: {mode}")
                 continue
@@ -97,7 +97,9 @@ def main(args):
             logging.info(f"Processing: {deployment}-{mode}")
 
             # convert binary *.T/EBD and *.S/DBD into *.t/ebd.nc and *.s/dbd.nc netcdf files.
-            logging.info(f"Converting binary {search} into merged *.nc netcdf files")
+            logging.info(
+                f"Converting binary *.{scisuffix} and *.{glidersuffix} into *.{scisuffix}.nc and *.{glidersuffix}.nc netcdf files"
+            )
             logging.info(f"Binary filepath: {binarydir}")
             logging.info(f"Cache filepath: {cacdir}")
             logging.info(f"Output filepath: {rawncdir}")
@@ -110,13 +112,15 @@ def main(args):
                 [f for f in os.listdir(binarydir) if f.endswith(f".{glidersuffix}")]
             )
 
-            slocum.binary_to_profiles(
-                indir=binarydir,
-                cachedir=cacdir,
-                outdir=rawncdir,
-                deploymentyaml=deploymentyaml,
-                search=search,
-                _log=logging,
+            slocum.binary_to_rawnc(
+                binarydir,
+                rawncdir,
+                cacdir,
+                sensorlist,
+                deploymentyaml,
+                incremental=True,
+                scisuffix=scisuffix,
+                glidersuffix=glidersuffix,
             )
 
             # log how many files were successfully converted from binary to *.nc

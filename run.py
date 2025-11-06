@@ -35,7 +35,7 @@ def main(args):
     bin2raw.main(args)
     print("Done!")
 
-    # TODO: qc
+    # TODO: raw to trajectory?
 
     return 0
 
