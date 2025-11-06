@@ -1,6 +1,9 @@
+# directories
+data
 deployments
 pyglider
 .vscode
 __pycache__
-# for now
+
+# filetypes
 *.ipynb
