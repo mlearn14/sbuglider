@@ -62,11 +62,9 @@ def main(args):
                 continue
 
             # set up logger
-            logfilename = logfile_deploymentname(
-                deployment, mode, "proc_binary_to_rawnc"
-            )
+            logfilename = logfile_deploymentname(deployment, mode, "bin2raw")
             logFile = os.path.join(deployment_location, "proc-logs", logfilename)
-            logging = setup_logger("logging", loglevel, logFile)
+            logging = setup_logger(__name__, loglevel, logFile)
 
             # Set the deployment configuration path
             deployment_config_root = os.path.join(deployment_location, "config", "proc")
@@ -184,4 +182,4 @@ if __name__ == "__main__":
 
     parsed_args = arg_parser.parse_args()
 
-    sys.exit(main(parsed_args))
+    main(parsed_args)
