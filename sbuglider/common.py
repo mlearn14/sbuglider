@@ -147,7 +147,7 @@ def find_glider_deployment_location(logger, deployment, deployments_root):
 
             # Check if directory exists
             if os.path.isdir(deployment_location):
-                logger.info(f"Deployment location found: {deployment_location}")
+                logger.debug(f"Deployment location found: {deployment_location}")
             else:
                 logger.warning(
                     f"Deployment location does not exist: {deployment_location}"
