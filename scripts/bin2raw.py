@@ -61,7 +61,7 @@ def main(args):
                 continue
 
             # set up logger
-            logfilename = logfile_deploymentname(deployment, mode, "bin2raw")
+            logfilename = logfile_deploymentname(deployment, mode, "proc_bin2raw")
             logFile = os.path.join(deployment_location, "proc-logs", logfilename)
             logging = setup_logger(__name__, loglevel, logFile)
 
