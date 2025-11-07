@@ -69,8 +69,8 @@ def main(args):
             )
 
             # decompress files and send to binary directory
-            cf.decompress_dbds(logging_base, flight_dir, binary_dir)
-            cf.decompress_dbds(logging_base, science_dir, binary_dir)
+            cf.decompress_dbds(logging_base, flight_suffix, flight_dir, binary_dir)
+            cf.decompress_dbds(logging_base, sci_suffix, science_dir, binary_dir)
 
             logging_base.info(
                 f"Decompressed and wrote {len(flight_files)} flight and {len(science_files)} science files to {binary_dir}"

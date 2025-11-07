@@ -43,6 +43,7 @@ def convert_epoch_ts(data):
 def decompress_dbds(
     logger,
     indir,
+    suffix=".*cd",
     outdir=None,
     script="/home/gsb/projects/slocum/bin2ascii/decompress_dbds.sh",
 ):
@@ -55,6 +56,7 @@ def decompress_dbds(
     ----------
         logger (Logger): logger object
         indir (str): input directory
+        suffix (str): file suffix
         outdir (str): output directory
         script (str): absolute path to decompress_dbds.sh
     """
@@ -64,7 +66,7 @@ def decompress_dbds(
     if outdir is None:
         outdir = indir
 
-    cmd = f"{script_relpath} -o {outdir} {indir}/*.*cd"
+    cmd = f"{script_relpath} -o {outdir} {indir}/*{suffix}"
     result = subprocess.run(
         cmd,
         cwd=repo_root,
