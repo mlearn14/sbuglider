@@ -121,6 +121,7 @@ def main(args):
                 incremental=True,
                 scisuffix=scisuffix,
                 glidersuffix=glidersuffix,
+                _log=logging,
             )
 
             # log how many files were successfully converted from binary to *.nc
