@@ -1,0 +1,296 @@
+#!/usr/bin/env python
+
+"""
+Author: lgarzio on 5/14/2025
+Last modified: mlearn14 on 11/07/2025
+Convert raw DBD/EBD or SBD/TBD netCDF files from
+Slocum gliders to merged timeseries netCDF files using pyglider.
+"""
+
+import os
+import argparse
+import sys
+import glob
+import yaml
+import xarray as xr
+import numpy as np
+from netCDF4 import default_fillvals
+import pyglider.slocum as slocum
+import sbuglider.common as cf
+from sbuglider.loggers import logfile_basename, setup_logger, logfile_deploymentname
+
+
+def add_profile_vars(dataset, add_var, profile_meta, template_var="profile_id"):
+    v = np.zeros(np.shape(dataset[template_var]))
+    if np.any(dataset[template_var] != 0):
+        sourcevar = profile_meta[add_var]["source"]
+        unique_ids = np.unique(dataset[template_var].values)
+        for i in unique_ids:
+            if i != 0:
+                idx = np.where(dataset[template_var] == i)[0]
+                v[idx] = np.nanmean(dataset[sourcevar].values[idx])
+
+    da = xr.DataArray(
+        v,
+        coords=dataset[template_var].coords,
+        dims=dataset[template_var].dims,
+        name=add_var,
+        attrs=profile_meta[add_var],
+    )
+
+    dataset[add_var] = da
+
+
+def build_encoding(encoding_dict, ds, variable):
+    # set the fill value using netCDF4.default_fillvals
+    if variable == "time":
+        encoding_dict[variable] = {
+            "zlib": True,
+            "complevel": 1,
+            "dtype": np.float64,
+            "_FillValue": default_fillvals["f8"],
+            "units": "seconds since 1970-01-01T00:00:00Z",
+            "calendar": "gregorian",
+        }
+    else:
+        encoding_type = f"{ds[variable].dtype.kind}{ds[variable].dtype.itemsize}"
+        encoding_dict[variable] = {
+            "zlib": True,
+            "complevel": 1,
+            "dtype": ds[variable].dtype,
+            "_FillValue": default_fillvals[encoding_type],
+        }
+
+
+def convert_to_decimal_degrees(nmea_values):
+    # convert NMEA lat/lon format (DDMM.MMMM) to decimal degrees (DD.DDDDDD)
+    # Extract degrees and minutes
+    degrees = nmea_values // 100  # Get the integer part (degrees)
+    minutes = nmea_values % 100  # Get the fractional part (minutes)
+
+    # Convert to decimal degrees
+    decimal_degrees = degrees + (minutes / 60)
+    return decimal_degrees
+
+
+def main(args):
+    # def main(deployments, mode, loglevel, test):
+    loglevel = args.loglevel.upper()
+    mode = args.mode
+    test = args.test
+    loglevel = loglevel.upper()
+
+    # logFile_base = os.path.join(os.path.expanduser('~'), 'glider_proc_log')  # for debugging
+    logFile_base = logfile_basename()
+    logging_base = setup_logger("logging_base", loglevel, logFile_base)
+
+    data_home, deployments_root = cf.find_glider_deployments_rootdir(logging_base, test)
+
+    if isinstance(deployments_root, str):
+
+        for deployment in args.deployments:
+            # for deployment in [deployments]:
+
+            # find the deployment binary data filepath
+            binarydir, rawncdir, outdir, deployment_location = (
+                cf.find_glider_deployment_datapath(
+                    logging_base, deployment, deployments_root, mode
+                )
+            )
+
+            if not os.path.isdir(rawncdir):
+                logging_base.error(
+                    f"{deployment} raw NetCDF file data directory not found"
+                )
+                continue
+
+            if not os.path.isdir(outdir):
+                logging_base.error(f"{deployment} output file data directory not found")
+                continue
+
+            if not os.path.isdir(os.path.join(deployment_location, "proc-logs")):
+                logging_base.error(
+                    f"{deployment} deployment proc-logs directory not found"
+                )
+                continue
+
+            logfilename = logfile_deploymentname(
+                deployment, mode, "proc_merge_nc_to_timeseries"
+            )
+            logFile = os.path.join(deployment_location, "proc-logs", logfilename)
+            logging = setup_logger(__name__, loglevel, logFile)
+
+            # Set the deployment configuration path
+            deployment_config_root = os.path.join(deployment_location, "config", "proc")
+            if not os.path.isdir(deployment_config_root):
+                logging.warning(
+                    f"Invalid deployment config root: {deployment_config_root}"
+                )
+
+            # Find metadata file
+            deploymentyaml = os.path.join(deployment_config_root, "deployment.yml")
+            if os.path.isfile(deploymentyaml):
+                with open(deploymentyaml, "r") as file:
+                    try:
+                        deployment_meta = yaml.safe_load(file)  # Parse the YAML file
+                    except yaml.YAMLError as e:
+                        logging.error(f"Error reading YAML file {deploymentyaml}: {e}")
+                        continue
+            else:
+                logging.error(f"deployment.yaml file not found: {deploymentyaml}")
+                continue
+
+            if mode == "rt":
+                scisuffix = "tbd"
+                glidersuffix = "sbd"
+                profile_filter_time = 30
+            elif mode == "delayed":
+                scisuffix = "ebd"
+                glidersuffix = "dbd"
+                profile_filter_time = 30
+            else:
+                logging.warning(f"Invalid mode provided: {mode}")
+                continue
+
+            logging.info(f"Processing: {deployment} {mode}")
+
+            # make timeseries netcdf file from each debd.nc/stdb.nc pair
+            logging.info(
+                f"merging *.{scisuffix}.nc and *.{glidersuffix}.nc netcdf files into timeseries netcdf files"
+            )
+            logging.info(
+                f"Individual *.{scisuffix}.nc and *.{glidersuffix}.nc filepath: {rawncdir}"
+            )
+            logging.info(f"Timeseries output filepath: {outdir}")
+
+            files = glob.glob(os.path.join(rawncdir, "*.nc"))
+            segment_list = []
+            for file in files:
+                segment = os.path.basename(file).split(".")[0]
+                if segment not in segment_list:
+                    segment_list.append(segment)
+
+            # log the number of .nc files to be merged
+            scicount = len(
+                [f for f in os.listdir(rawncdir) if f.endswith(f".{scisuffix}.nc")]
+            )
+            flightcount = len(
+                [f for f in os.listdir(rawncdir) if f.endswith(f".{glidersuffix}.nc")]
+            )
+            logging.info(
+                f"Found {scicount} *.{scisuffix}.nc (science) and {flightcount} *.{glidersuffix}.nc (flight) files to merge"
+            )
+
+            for seg in sorted(segment_list):
+                print(seg)
+                ds, savefile = slocum.raw_segment_to_timeseries(
+                    rawncdir,
+                    outdir,
+                    deploymentyaml,
+                    logging,
+                    profile_filt_time=profile_filter_time,
+                    profile_min_time=60,
+                    segment=seg,
+                )
+
+                if ds is not None:
+                    # convert NMEA lat/lon format (DDMM.MMMM) to decimal degrees (DD.DDDDDD)
+                    ds["latitude"].values = convert_to_decimal_degrees(
+                        ds["latitude"].values
+                    )
+                    ds["longitude"].values = convert_to_decimal_degrees(
+                        ds["longitude"].values
+                    )
+
+                    # add profile_lat and profile_lon
+                    add_profile_vars(
+                        ds, "profile_lat", deployment_meta["profile_variables"]
+                    )
+                    add_profile_vars(
+                        ds, "profile_lon", deployment_meta["profile_variables"]
+                    )
+
+                    # add platform metadata variable
+                    da = xr.DataArray(
+                        np.array(np.nan),
+                        name="platform",
+                        attrs=deployment_meta["platform"],
+                    )
+                    ds["platform"] = da
+
+                    # add instrument metadata variables
+                    for ncvar_name, attributes in deployment_meta.get(
+                        "instruments", {}
+                    ).items():
+                        da = xr.DataArray(
+                            np.array(np.nan), name=ncvar_name, attrs=attributes
+                        )
+                        ds[ncvar_name] = da
+
+                    # add variable encoding
+                    encoding = dict()
+                    for v in ds.data_vars:
+                        build_encoding(encoding, ds, v)
+
+                    for v in ds.coords:
+                        build_encoding(encoding, ds, v)
+
+                    outname = os.path.join(outdir, savefile)
+                    logging.info(f"Writing {outname}")
+                    ds.to_netcdf(outname, "w", encoding=encoding)
+
+                    # for testing
+                    savefile = savefile.replace(".nc", ".csv")
+                    outcsv = os.path.join(outdir, savefile)
+                    ds.to_dataframe().to_csv(outcsv)
+
+            # log how many files were successfully merged
+            outputcount = len([f for f in os.listdir(outdir) if f.endswith(".nc")])
+            logging.info(
+                f"Successfully created {outputcount} merged *.nc files (out of {scicount} *.{scisuffix}.nc files and {flightcount} *.{glidersuffix}.nc files)"
+            )
+
+
+if __name__ == "__main__":
+    # deploy = 'ru39-20250423T1535'  #  ru44-20250306T0038 ru44-20250325T0438 ru39-20250423T1535
+    # mode = 'delayed'  # delayed rt
+    # ll = 'info'
+    # test = True
+    # main(deploy, mode, ll, test)
+    arg_parser = argparse.ArgumentParser(
+        description=main.__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+
+    arg_parser.add_argument(
+        "deployments",
+        nargs="+",
+        help="Glider deployment name(s) formatted as glider-YYYYmmddTHHMM",
+    )
+
+    arg_parser.add_argument(
+        "-m",
+        "--mode",
+        help="Dataset mode: real-time (rt) or delayed-mode (delayed)",
+        choices=["rt", "delayed"],
+        default="rt",
+    )
+
+    arg_parser.add_argument(
+        "-l",
+        "--loglevel",
+        help="Verbosity level",
+        type=str,
+        choices=["debug", "info", "warning", "error"],
+        default="info",
+    )
+
+    arg_parser.add_argument(
+        "-test",
+        "--test",
+        help="Point to the environment variable key GLIDER_DATA_HOME_TEST for testing.",
+        action="store_true",
+    )
+
+    parsed_args = arg_parser.parse_args()
+
+    sys.exit(main(parsed_args))
