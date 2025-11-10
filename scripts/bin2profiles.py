@@ -85,12 +85,12 @@ def main(args):
                 scisuffix = "tbd"
                 glidersuffix = "sbd"
                 search = "*.[s|t]bd"
-                profile_filter_time = 30
+                profile_filter_time = 40
             elif mode == "delayed":
                 scisuffix = "ebd"
                 glidersuffix = "dbd"
                 search = "*.[d|e]bd"
-                profile_filter_time = 30
+                profile_filter_time = 40
             else:
                 logging.warning(f"Invalid mode provided: {mode}")
                 continue
@@ -120,7 +120,7 @@ def main(args):
                 deploymentyaml,
                 search=search,
                 profile_filt_time=profile_filter_time,
-                profile_min_time=60,
+                profile_min_time=180,
                 _log=logging,
             )
 
