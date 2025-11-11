@@ -18,6 +18,8 @@ def main(args):
     def main(deployments, mode, loglevel, test):
     """
     deployments: list[str] = args.deployments
+    profile_filter_time: int = args.filt_time
+    min_time: int = args.min_time
     loglevel: str = args.loglevel.upper()
     mode: str = args.mode.lower()
     test: bool = args.test
@@ -85,12 +87,12 @@ def main(args):
                 scisuffix = "tbd"
                 glidersuffix = "sbd"
                 search = "*.[s|t]bd"
-                profile_filter_time = 40
+                # profile_filter_time = 40
             elif mode == "delayed":
                 scisuffix = "ebd"
                 glidersuffix = "dbd"
                 search = "*.[d|e]bd"
-                profile_filter_time = 40
+                # profile_filter_time = 40
             else:
                 logging.warning(f"Invalid mode provided: {mode}")
                 continue
@@ -120,7 +122,7 @@ def main(args):
                 deploymentyaml,
                 search=search,
                 profile_filt_time=profile_filter_time,
-                profile_min_time=180,
+                profile_min_time=min_time,
                 _log=logging,
             )
 
@@ -146,6 +148,21 @@ if __name__ == "__main__":
         "deployments",
         nargs="+",
         help="Glider deployment name(s) formatted as glider-YYYYmmddTHHMM",
+    )
+
+    arg_parser.add_argument(
+        "-f",
+        "--filt_time",
+        help="Filter time in seconds",
+        type=int,
+        default=40,
+    )
+
+    arg_parser.add_argument(
+        "-mt",
+        "--min_time",
+        help="Minimum time in seconds",
+        type=int,
     )
 
     arg_parser.add_argument(
