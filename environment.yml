@@ -1,34 +1,150 @@
 name: sbuglider
 channels:
   - defaults
+  - conda-forge
 dependencies:
   - _libgcc_mutex=0.1=main
   - _openmp_mutex=5.1=1_gnu
+  - aom=3.6.0=h6a678d5_0
+  - blas=2.138=openblas
+  - blas-devel=3.9.0=38_h1ea3ea9_openblas
+  - bottleneck=1.4.2=py314h6a40391_1
+  - brotli=1.0.9=h166bdaf_7
+  - brotli-bin=1.0.9=h166bdaf_7
   - bzip2=1.0.8=h5eee18b_6
-  - ca-certificates=2025.9.9=h06a4308_0
+  - ca-certificates=2025.10.5=hbd8a1cb_0
+  - cairo=1.18.4=h44eff21_0
+  - cmocean=4.0.3=pyhd8ed1ab_1
+  - colorspacious=1.1.2=pyhecae5ae_1
+  - contourpy=1.3.1=py314hdb19cb5_0
+  - cycler=0.12.1=pyhd8ed1ab_1
+  - cyrus-sasl=2.1.28=h1110e0f_3
+  - dav1d=1.2.1=h5eee18b_0
   - expat=2.7.1=h6a678d5_0
+  - fontconfig=2.15.0=h2c49b7f_0
+  - fonttools=4.60.1=pyh7db6752_0
+  - freetype=2.13.3=h4a9f257_0
+  - fribidi=1.0.10=h36c2ea0_0
+  - graphite2=1.3.14=h295c915_1
+  - harfbuzz=10.2.0=hdfddeaa_1
+  - icu=73.1=h6a678d5_0
+  - jpeg=9e=h166bdaf_1
+  - kiwisolver=1.4.8=py314h6a678d5_0
+  - lcms2=2.16=h92b89f2_1
   - ld_impl_linux-64=2.44=h153f514_2
+  - lerc=4.0.0=h6a678d5_0
+  - libavif=1.1.1=h5eee18b_0
+  - libblas=3.9.0=38_h4a7cf45_openblas
+  - libbrotlicommon=1.0.9=h166bdaf_7
+  - libbrotlidec=1.0.9=h166bdaf_7
+  - libbrotlienc=1.0.9=h166bdaf_7
+  - libcblas=3.9.0=38_h0358290_openblas
+  - libcups=2.4.2=h252cb56_2
+  - libdeflate=1.22=h5eee18b_0
+  - libdrm=2.4.124=h5eee18b_0
+  - libegl=1.7.0=ha4b6fd6_2
+  - libevent=2.1.12=hdbd6064_1
   - libffi=3.4.4=h6a678d5_1
+  - libgcc=7.2.0=h69d50b8_2
   - libgcc-ng=11.2.0=h1234567_1
+  - libgfortran=3.0.0=1
+  - libgfortran-ng=13.2.0=h69a702a_0
+  - libgfortran5=13.2.0=ha4646dd_0
+  - libgl=1.7.0=ha4b6fd6_2
+  - libglib=2.84.4=h77a78f3_0
+  - libglvnd=1.7.0=ha4b6fd6_2
+  - libglx=1.7.0=ha4b6fd6_2
   - libgomp=11.2.0=h1234567_1
+  - libiconv=1.17=h166bdaf_0
+  - libkrb5=1.21.3=h520c7b4_4
+  - liblapack=3.9.0=38_h47877c9_openblas
+  - liblapacke=3.9.0=38_h6ae95b6_openblas
+  - libllvm15=15.0.7=he89c38a_4
   - libmpdec=4.0.0=h5eee18b_0
+  - libopenblas=0.3.30=h46f56fc_1
+  - libopengl=1.7.0=ha4b6fd6_2
+  - libopenjpeg=2.5.4=hee96239_1
+  - libpciaccess=0.18=h5eee18b_0
+  - libpng=1.6.50=h2ed474d_0
+  - libpq=17.6=ha51bf15_0
+  - libsodium=1.0.20=heac8642_0
   - libstdcxx-ng=11.2.0=h1234567_1
+  - libtiff=4.7.0=hde9077f_0
   - libuuid=1.41.5=h5eee18b_0
+  - libwebp-base=1.3.2=h5eee18b_1
   - libxcb=1.17.0=h9b100fa_0
+  - libxkbcommon=1.9.1=h69220b7_0
+  - libxml2=2.13.9=h2c43086_0
   - libzlib=1.3.1=hb25bd0a_0
+  - lmdb=0.9.29=h166bdaf_1
   - lz4-c=1.9.4=h6a678d5_1
+  - matplotlib=3.10.6=py314h06a4308_1
+  - matplotlib-base=3.10.6=py314haca3bed_1
+  - mesalib=25.1.5=h31e3550_0
+  - munkres=1.1.4=pyhd8ed1ab_1
+  - mysql-common=9.3.0=h0021b1a_3
+  - mysql-libs=9.3.0=h797a5cd_3
   - ncurses=6.5=h7934f7d_0
+  - nomkl=3.0=0
+  - numexpr=2.14.1=py314h4c79f44_0
+  - numpy=2.3.4=py314h8d14b15_1
+  - numpy-base=2.3.4=py314h8dfe1fa_1
+  - openblas=0.3.30=h5426c36_1
+  - openblas-devel=0.3.30=h557178c_1
+  - openldap=2.6.10=he9288cc_1
   - openssl=3.0.18=hd6dcaed_0
+  - packaging=25.0=pyh29332c3_1
+  - pandas=2.3.3=py314hda4e5d8_1
+  - pcre2=10.46=hf426167_0
+  - pillow=12.0.0=py314h3b88751_1
   - pip=25.2=pyh0d26453_1
+  - pixman=0.46.4=h7934f7d_0
   - pthread-stubs=0.3=h0ce48e5_1
+  - pyparsing=3.2.5=pyhcf101f3_0
+  - pyqt=6.9.1=py314h43fb04a_0
+  - pyqt6-sip=13.10.2=py314hee96239_0
   - python=3.14.0=h3fc5862_101_cp314
+  - python-dateutil=2.9.0.post0=pyhe01879c_2
+  - python-tzdata=2025.2=pyhd8ed1ab_0
   - python_abi=3.14=1_cp314
+  - pytz=2025.2=pyhd8ed1ab_0
+  - qtbase=6.9.2=hd13baf8_4
+  - qtdeclarative=6.9.2=h55666de_1
+  - qtsvg=6.9.2=h75a08ff_1
+  - qttools=6.9.2=hc856bc8_1
+  - qtwayland=6.9.2=h9f1b7ec_1
+  - qtwebchannel=6.9.2=hbdd6827_1
+  - qtwebsockets=6.9.2=hbdd6827_1
   - readline=8.3=hc2a1206_0
+  - seaborn=0.11.2=pyhd3eb1b0_0
+  - setuptools=80.9.0=pyhff2d567_0
+  - sip=6.12.0=py314h695c4d2_0
+  - six=1.17.0=pyhe01879c_1
+  - spirv-tools=2025.1=hdb19cb5_0
   - sqlite=3.50.2=hb25bd0a_1
   - tk=8.6.15=h54e0aa7_0
+  - tornado=6.5.1=py314h5eee18b_0
+  - tzdata=2025b=h04d1e81_0
+  - unicodedata2=16.0.0=py314hee96239_0
+  - wayland=1.24.0=hdac8c69_0
+  - xcb-util=0.4.1=h5eee18b_2
+  - xcb-util-cursor=0.1.5=h5eee18b_0
+  - xcb-util-image=0.4.0=h5eee18b_2
+  - xcb-util-keysyms=0.4.1=h5eee18b_0
+  - xcb-util-renderutil=0.3.10=h5eee18b_0
+  - xcb-util-wm=0.4.2=h5eee18b_0
+  - xkeyboard-config=2.31=h516909a_0
+  - xorg-libice=1.1.2=h9b100fa_0
+  - xorg-libsm=1.2.6=h9b100fa_0
   - xorg-libx11=1.8.12=h9b100fa_1
   - xorg-libxau=1.0.12=h9b100fa_0
   - xorg-libxdmcp=1.1.5=h9b100fa_0
+  - xorg-libxext=1.3.6=h9b100fa_0
+  - xorg-libxfixes=6.0.1=h9b100fa_0
+  - xorg-libxrandr=1.5.4=h9b100fa_0
+  - xorg-libxrender=0.9.12=h9b100fa_0
+  - xorg-libxshmfence=1.3.3=h9b100fa_0
+  - xorg-libxxf86vm=1.1.6=h9b100fa_0
   - xorg-xorgproto=2024.1=h5eee18b_1
   - xz=5.6.4=h5eee18b_1
   - zlib=1.3.1=hb25bd0a_0
@@ -42,28 +158,27 @@ dependencies:
       - click==8.3.0
       - cloudpickle==3.1.2
       - dask==2025.10.0
+      - dbdreader==0.5.8
       - fsspec==2025.10.0
       - gsw==3.6.20
       - idna==3.11
+      - iniconfig==2.3.0
       - locket==1.0.0
+      - lz4==4.4.5
       - netcdf4==1.7.3
-      - numpy==2.3.4
-      - packaging==25.0
-      - pandas==2.3.3
       - partd==1.4.2
       - platformdirs==4.5.0
+      - pluggy==1.6.0
       - polars==1.35.1
       - polars-runtime-32==1.35.1
       - pooch==1.8.2
       - pyglider==0.0.7
-      - python-dateutil==2.9.0.post0
-      - pytz==2025.2
+      - pygments==2.19.2
+      - pytest==8.4.2
       - pyyaml==6.0.3
       - requests==2.32.5
       - scipy==1.16.3
-      - six==1.17.0
       - toolz==1.1.0
-      - tzdata==2025.2
       - urllib3==2.5.0
       - xarray==2025.10.1
-prefix: /home/gsb/miniconda3/envs/sbuglider
+prefix: /home/localuser/miniconda3/envs/sbuglider
