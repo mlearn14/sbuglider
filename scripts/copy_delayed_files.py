@@ -13,8 +13,8 @@ from sbuglider.loggers import logfile_basename, setup_logger
 def _check_files(
     flight_dir, flight_suffix, science_dir, sci_suffix, logging
 ) -> tuple[list, list]:
-    flight_files = glob.glob(os.path.join(flight_dir, flight_suffix))
-    science_files = glob.glob(os.path.join(science_dir, sci_suffix))
+    flight_files = glob.glob(os.path.join(flight_dir, "*" + flight_suffix))
+    science_files = glob.glob(os.path.join(science_dir, "*" + sci_suffix))
 
     if len(flight_files) == 0 or len(science_files) == 0:
         logging.error(
@@ -62,22 +62,22 @@ def main(args):
 
         # check if files exist
         if compression:
-            flight_suffix = "*.dcd"
-            sci_suffix = "*.ecd"
+            flight_suffix = ".dcd"
+            sci_suffix = ".ecd"
             flight_files, science_files = _check_files(
                 flight_dir, flight_suffix, science_dir, sci_suffix, logging_base
             )
 
             # decompress files and send to binary directory
-            cf.decompress_dbds(logging_base, flight_suffix, flight_dir, binary_dir)
-            cf.decompress_dbds(logging_base, sci_suffix, science_dir, binary_dir)
+            cf.decompress_dbds(logging_base, flight_dir, flight_suffix, binary_dir)
+            cf.decompress_dbds(logging_base, science_dir, sci_suffix, binary_dir)
 
             logging_base.info(
                 f"Decompressed and wrote {len(flight_files)} flight and {len(science_files)} science files to {binary_dir}"
             )
         else:
-            flight_suffix = "*.dbd"
-            sci_suffix = "*.ebd"
+            flight_suffix = ".dbd"
+            sci_suffix = ".ebd"
             flight_files, science_files = _check_files(
                 flight_dir, flight_suffix, science_dir, sci_suffix, logging_base
             )
