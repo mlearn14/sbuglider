@@ -9,3 +9,6 @@ __pycache__
 *.ipynb
 *.nc
 *.png
+
+# testing files
+debug_*
