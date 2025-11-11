@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 from dateutil import parser
 import os
 import logging
@@ -45,7 +46,7 @@ def decompress_dbds(
     indir,
     suffix=".*cd",
     outdir=None,
-    script="/home/gsb/projects/slocum/bin2ascii/decompress_dbds.sh",
+    script="~/projects/slocum/bin2ascii/decompress_dbds.sh",
 ):
     """
     Decompresses each dinkum compressed data (*.*cd) file in the provided directory. Each decompressed file is written to the same directory unless specified.
@@ -60,13 +61,23 @@ def decompress_dbds(
         outdir (str): output directory
         script (str): absolute path to decompress_dbds.sh
     """
+    script = os.path.expanduser(script)
+    logger.debug(f"script: {script}")
+
+    if os.path.exists(script) == False:
+        logger.error(f"Decompression script not found: {script}")
+        sys.exit(1)
+
     repo_root = os.path.dirname(os.path.dirname(script))
     script_relpath = os.path.relpath(script, repo_root)
+    logger.debug(f"repo_root: {repo_root}")
+    logger.debug(f"script_relpath: {script_relpath}")
 
     if outdir is None:
         outdir = indir
 
     cmd = f"{script_relpath} -o {outdir} {indir}/*{suffix}"
+    logger.debug(f"cmd: {cmd}")
     result = subprocess.run(
         cmd,
         cwd=repo_root,
@@ -79,6 +90,7 @@ def decompress_dbds(
     logger.error(f"stderr: {result.stderr}")
     if result.returncode != 0:
         logger.error(f"Decompression failed with code {result.returncode}")
+        sys.exit(1)
     else:
         logger.info("Decompression completed successfully.")
 
