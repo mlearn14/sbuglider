@@ -20,8 +20,10 @@ def main(args):
 
     # copy over delayed mode files
     if args.mode == "delayed":
+        # the decompression step isn't really necessary with this version, but it's here in case other functions are added.
+        print("Decompressing delayed mode binary files...", end=" ")
         copy_delayed_files.main(args)
-        print("Delayed mode files copied.")
+        print("Done!")
 
     # check if config files are present
     check_config_files.main(args)
@@ -73,6 +75,22 @@ if __name__ == "__main__":
         help="Set the logging level",
         choices=["debug", "info", "warning", "error", "critical"],
         default="info",
+    )
+
+    arg_parser.add_argument(
+        "-f",
+        "--filt_time",
+        help="Profile filter time in seconds",
+        type=int,
+        default=40,
+    )
+
+    arg_parser.add_argument(
+        "-mt",
+        "--min_time",
+        help="Minimum profile time in seconds",
+        type=int,
+        default=120,
     )
 
     arg_parser.add_argument(
