@@ -9,10 +9,9 @@ import sys
 
 from sbuglider.loggers import logfile_basename, setup_logger
 
-# TODO: add env variable for template config file locations.
-
 
 def main(args):
+    """Copy config files into deployment config directory"""
     deployments = args.deployments
     loglevel = args.loglevel.upper()
 
