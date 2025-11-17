@@ -22,8 +22,23 @@ def main(args):
     data_home = os.getenv("GLIDER_DATA_HOME")
     config_home = os.getenv("GLIDER_CONFIG_HOME")
 
+    if not data_home:
+        logging_base.error("GLIDER_DATA_HOME not set")
+        sys.exit(1)
+    elif not os.path.isdir(data_home):
+        logging_base.error("Invalid GLIDER_DATA_HOME: " + data_home)
+        sys.exit(1)
+
+    if not config_home:
+        logging_base.error("GLIDER_CONFIG_HOME not set")
+        sys.exit(1)
+    elif not os.path.isdir(config_home):
+        logging_base.error("Invalid GLIDER_CONFIG_HOME: " + config_home)
+        sys.exit(1)
+
     for deployment in deployments:
         glider_name = deployment.split("-")[0]
+        year = deployment.split("-")[1][:4]
 
         # check if config root directory and files exist
         indir = os.path.join(config_home, glider_name)
@@ -32,7 +47,9 @@ def main(args):
             sys.exit(1)
 
         # check if deployment config directory exists
-        outdir = os.path.join(data_home, "deployments", deployment, "config", "proc")
+        outdir = os.path.join(
+            data_home, "deployments", year, deployment, "config", "proc"
+        )
         if not os.path.isdir(outdir):
             logging_base.error(f"Deployment config directory {outdir} not found")
             sys.exit(1)
@@ -49,7 +66,10 @@ def main(args):
     # Confirmation step to make user sure that all config files are correct.
     for deployment in deployments:
         glider_name = deployment.split("-")[0]
-        outdir = os.path.join(data_home, "deployments", deployment, "config", "proc")
+        year = deployment.split("-")[1][:4]
+        outdir = os.path.join(
+            data_home, "deployments", year, deployment, "config", "proc"
+        )
         subprocess.Popen(["xdg-open", outdir])  # linux specific!
 
         response = input(
