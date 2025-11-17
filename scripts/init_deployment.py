@@ -24,6 +24,13 @@ def main(args):
     # find the glider deployments root directory
     data_home = os.getenv("GLIDER_DATA_HOME")
 
+    if not data_home:
+        logging_base.error("GLIDER_DATA_HOME not set")
+        sys.exit(1)
+    elif not os.path.isdir(data_home):
+        logging_base.error("Invalid GLIDER_DATA_HOME: " + data_home)
+        sys.exit(1)
+
     # create the deployment directory
     for deployment in deployments:
         deployment_root = os.path.join(data_home, "deployments")
