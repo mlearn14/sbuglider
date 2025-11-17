@@ -153,7 +153,7 @@ if __name__ == "__main__":
     arg_parser.add_argument(
         "-f",
         "--filt_time",
-        help="Filter time in seconds",
+        help="Profile filter time in seconds",
         type=int,
         default=40,
     )
@@ -161,8 +161,9 @@ if __name__ == "__main__":
     arg_parser.add_argument(
         "-mt",
         "--min_time",
-        help="Minimum time in seconds",
+        help="Minimum profile time in seconds",
         type=int,
+        default=120,
     )
 
     arg_parser.add_argument(
