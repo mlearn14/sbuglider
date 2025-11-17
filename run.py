@@ -6,9 +6,9 @@ import sys
 from scripts import (
     init_deployment,
     copy_delayed_files,
-    # copy_config_files,
+    check_config_files,
     generate_deploymentyaml,
-    bin2raw,
+    bin2profiles,
 )
 
 
@@ -24,7 +24,8 @@ def main(args):
         print("Delayed mode files copied.")
 
     # check if config files are present
-    # TODO: add script to check for config files
+    check_config_files.main(args)
+    print("Config files copied and confirmed.")
 
     # create deployment yaml
     generate_deploymentyaml.main(args)
@@ -32,7 +33,7 @@ def main(args):
 
     # convert binary data to raw netcdfs
     print("Converting binary data to raw netcdfs...", end=" ")
-    bin2raw.main(args)
+    bin2profiles.main(args)
     print("Done!")
 
     # TODO: raw to trajectory?
