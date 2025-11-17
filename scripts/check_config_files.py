@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
 import argparse
+import glob
 import os
+import shutil
+import subprocess
 import sys
 
 from sbuglider.loggers import logfile_basename, setup_logger
@@ -18,23 +21,48 @@ def main(args):
     logging_base = setup_logger("logging_base", loglevel, logfile_base)
 
     data_home = os.getenv("GLIDER_DATA_HOME")
+    config_home = os.getenv("GLIDER_CONFIG_HOME")
 
     for deployment in deployments:
-        # TODO: Add check for template config directory and files from env variable
         glider_name = deployment.split("-")[0]
 
-        config_dir = os.path.join(
-            data_home, "deployments", deployment, "config", "proc"
-        )
-        if not os.path.isdir(config_dir):
-            logging_base.error(f"Config directory {config_dir} not found")
+        # check if config root directory and files exist
+        indir = os.path.join(config_home, glider_name)
+        if not os.path.isdir(indir):
+            logging_base.error(f"Template config directory {indir} not found")
             sys.exit(1)
 
-        # TODO: copy files over
+        # check if deployment config directory exists
+        outdir = os.path.join(data_home, "deployments", deployment, "config", "proc")
+        if not os.path.isdir(outdir):
+            logging_base.error(f"Deployment config directory {outdir} not found")
+            sys.exit(1)
 
-    # TODO: end of function. Add confirmation step to make user sure that all config files are correct.
+        filenames = os.path.join(indir, "*")
+        files = glob.glob(filenames)
+
+        try:
+            [shutil.copy(f, outdir) for f in files]
+        except Exception as e:
+            logging_base.error(f"Error copying config files: {e}")
+            sys.exit(1)
+
+    # Confirmation step to make user sure that all config files are correct.
     for deployment in deployments:
-        pass  # confirmation step goes here!
+        glider_name = deployment.split("-")[0]
+        outdir = os.path.join(data_home, "deployments", deployment, "config", "proc")
+        subprocess.Popen(["xdg-open", outdir])  # linux specific!
+
+        response = input(
+            f"Are the config files for {deployment} correct? (y/n): "
+        ).lower()
+        if response != "y":
+            logging_base.error(f"USER EXIT: Config files for {deployment} not correct.")
+            sys.exit(1)
+
+        logging_base.info(f"Config files for {deployment} correct.")
+
+    logging_base.info("User confirmed all config files are correct.")
 
 
 if __name__ == "__main__":
