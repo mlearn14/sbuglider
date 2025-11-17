@@ -86,7 +86,7 @@ def main(args):
             try:
                 ffiles = [shutil.copy(f, binary_dir) for f in flight_files]
                 sfiles = [shutil.copy(f, binary_dir) for f in science_files]
-            except shutil.Error as e:
+            except Exception as e:
                 logging_base.error(f"Error copying files: {e}")
                 sys.exit(1)
 
