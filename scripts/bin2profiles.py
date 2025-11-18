@@ -182,8 +182,8 @@ if __name__ == "__main__":
         "-gt",
         "--gap_threshold",
         help="Minimum gap in seconds in a profile to be considered a gap",
-        type=float,
-        default=30.0,
+        type=int,
+        default=30,
     )
 
     arg_parser.add_argument(
