@@ -125,8 +125,8 @@ def main(args):
                 search=search,
                 profile_filt_time=profile_filter_time,
                 profile_min_time=min_time,
-                min_samples=75,
-                gap_threshold=30.0,
+                min_samples=min_samples,
+                gap_threshold=gap_threshold,
                 _log=logging,
             )
 
