@@ -115,7 +115,8 @@ def main(args):
                 [f for f in os.listdir(binarydir) if f.endswith(f".{glidersuffix}")]
             )
 
-            slocum.binary_to_timeseries_new(
+            # convert binary files and save to a temporary netcdf timeseries file
+            tmppath = slocum.binary_to_timeseries_new(
                 binarydir,
                 cacdir,
                 outdir,
@@ -127,6 +128,12 @@ def main(args):
                 gap_threshold=gap_threshold,
                 _log=logging,
             )
+
+            # extract profiles from the temporary netcdf timeseries file
+            ncprocess.extract_timeseries_profiles(tmppath, outdir, deploymentyaml)
+
+            # delete the temporary netcdf timeseries file
+            os.remove(tmppath)
 
             # log how many files were successfully converted from binary to *.nc
             ocount = len([f for f in os.listdir(outdir) if f.endswith(".nc")])
