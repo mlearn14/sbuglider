@@ -35,7 +35,7 @@ def main(args):
     print("Deployment yaml created.")
 
     # convert binary data to raw netcdfs
-    print("Converting binary data to raw netcdfs...", end=" ")
+    print("Converting binary data to raw netcdfs...", end=" ", flush=True)
     bin2profiles.main(args)
     print("Done!")
 
