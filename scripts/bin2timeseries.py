@@ -6,14 +6,13 @@ import sys
 
 import pyglider.ncprocess as ncprocess
 import pyglider.slocum as slocum
-import pyglider.utils as pgutils
 import sbuglider.common as cf
 from sbuglider.loggers import logfile_basename, logfile_deploymentname, setup_logger
 
 
 def main(args):
     """
-    Convert binary slocum glider data into raw netcdf profiles.
+    Convert binary slocum glider data into a raw netcdf timeseries.
 
     def main(deployments, mode, loglevel, test):
     """
@@ -116,7 +115,7 @@ def main(args):
                 [f for f in os.listdir(binarydir) if f.endswith(f".{glidersuffix}")]
             )
 
-            slocum.binary_to_profiles(
+            slocum.binary_to_timeseries_new(
                 binarydir,
                 cacdir,
                 outdir,
