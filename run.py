@@ -19,6 +19,7 @@ def main(args):
     print("Deployment directory structure initialized.")
 
     # copy over delayed mode files
+    # TODO: handle real-time compressed files
     if args.mode == "delayed":
         # the decompression step isn't really necessary with this version, but it's here in case other functions are added.
         print("Decompressing delayed mode binary files...", end=" ")
@@ -37,8 +38,6 @@ def main(args):
     print("Converting binary data to raw netcdfs...", end=" ")
     bin2profiles.main(args)
     print("Done!")
-
-    # TODO: raw to trajectory?
 
     return 0
 
