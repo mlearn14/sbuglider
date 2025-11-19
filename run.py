@@ -4,11 +4,11 @@ import argparse
 import sys
 
 from scripts import (
+    bin2profiles,
     init_deployment,
     copy_delayed_files,
     check_config_files,
     generate_deploymentyaml,
-    bin2profiles,
 )
 
 
