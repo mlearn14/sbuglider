@@ -46,7 +46,6 @@ def main(args):
                     logging_base, deployment, deployments_root, mode
                 )
             )
-            outdir = "/home/SOMAS_Glider/deployments/2025/sbu02-20250716T1543/data/out/delayed/test"  # TODO: for debugging. delete this!
 
             # check if binarydir, rawncdir, deployment_location exist
             if not os.path.isdir(binarydir):
