@@ -130,7 +130,7 @@ def main(args):
             )
 
             # extract profiles from the temporary netcdf timeseries file
-            ncprocess.extract_timeseries_profiles(tmppath, outdir, deploymentyaml)
+            ncprocess.extract_timeseries_profiles(tmppath, outdir, deploymentyaml, _log=logging)
 
             # delete the temporary netcdf timeseries file
             os.remove(tmppath)
