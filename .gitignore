@@ -12,3 +12,4 @@ __pycache__
 
 # testing files
 debug_*
+test_*
