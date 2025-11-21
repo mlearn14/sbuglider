@@ -18,14 +18,6 @@ def main(args):
     init_deployment.main(args)
     print("Deployment directory structure initialized.")
 
-    # copy over delayed mode files
-    # TODO: handle real-time compressed files
-    if args.mode == "delayed":
-        # the decompression step isn't really necessary with this version, but it's here in case other functions are added.
-        print("Decompressing delayed mode binary files...", end=" ")
-        copy_delayed_files.main(args)
-        print("Done!")
-
     # check if config files are present
     check_config_files.main(args)
     print("Config files copied and confirmed.")
@@ -33,6 +25,14 @@ def main(args):
     # create deployment yaml
     generate_deploymentyaml.main(args)
     print("Deployment yaml created.")
+
+    # copy over delayed mode files
+    # TODO: handle real-time compressed files
+    if args.mode == "delayed":
+        # the decompression step isn't really necessary with this version, but it's here in case other functions are added.
+        print("Decompressing delayed mode binary files...", end=" ")
+        copy_delayed_files.main(args)
+        print("Done!")
 
     # convert binary data to raw netcdfs
     print("Converting binary data to raw netcdfs...", end=" ", flush=True)
