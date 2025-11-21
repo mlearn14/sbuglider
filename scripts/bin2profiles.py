@@ -2,7 +2,6 @@
 
 import argparse
 import os
-import sys
 
 import pyglider.ncprocess as ncprocess
 import pyglider.slocum as slocum
