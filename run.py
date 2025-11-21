@@ -4,7 +4,7 @@ import argparse
 import sys
 
 from scripts import (
-    bin2profiles,
+    bin2timeseries,
     init_deployment,
     copy_delayed_files,
     check_config_files,
@@ -36,7 +36,7 @@ def main(args):
 
     # convert binary data to raw netcdfs
     print("Converting binary data to raw netcdfs...", end=" ", flush=True)
-    bin2profiles.main(args)
+    bin2timeseries.main(args)
     print("Done!")
 
     return 0
