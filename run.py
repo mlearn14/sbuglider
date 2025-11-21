@@ -30,7 +30,7 @@ def main(args):
     # TODO: handle real-time compressed files
     if args.mode == "delayed":
         # the decompression step isn't really necessary with this version, but it's here in case other functions are added.
-        print("Decompressing delayed mode binary files...", end=" ")
+        print("Decompressing delayed mode binary files...", end=" ", flush=True)
         copy_delayed_files.main(args)
         print("Done!")
 
