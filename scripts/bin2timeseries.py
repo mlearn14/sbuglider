@@ -61,7 +61,9 @@ def main(args):
                 continue
 
             # set up logger
-            logfilename = logfile_deploymentname(deployment, mode, "proc_bin2profiles")
+            logfilename = logfile_deploymentname(
+                deployment, mode, "proc_bin2timeseries"
+            )
             logFile = os.path.join(deployment_location, "proc-logs", logfilename)
             logging = setup_logger(__name__, loglevel, logFile)
 
@@ -132,6 +134,8 @@ def main(args):
                 f"Successfully merged {scicount} science binary files and {flightcount} engineering binary files into {ocount} netcdf timeseries file(s)"
             )
         logging.info(f"Finished converting binary files to L0 netcdf files")
+
+        # TODO: return the paths and datasets as a tuple of a list and a dictionary?
 
 
 if __name__ == "__main__":
