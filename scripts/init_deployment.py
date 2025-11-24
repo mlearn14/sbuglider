@@ -28,7 +28,9 @@ def main(args):
         logging_base.error("GLIDER_DATA_HOME not set")
         sys.exit(1)
     elif not os.path.isdir(data_home):
-        logging_base.error("Invalid GLIDER_DATA_HOME: " + data_home)
+        logging_base.error(
+            f"Invalid GLIDER_DATA_HOME: {data_home}. Be sure to create the directory '/home/SOMAS_Glider' and set the environment variable $GLIDER_DATA_HOME to it."
+        )
         sys.exit(1)
 
     # create the deployment directory
