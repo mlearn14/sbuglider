@@ -93,22 +93,6 @@ if __name__ == "__main__":
     )
 
     arg_parser.add_argument(
-        "-ms",
-        "--min_samples",
-        help="Minimum samples to be included in a profile",
-        type=int,
-        default=75,
-    )
-
-    arg_parser.add_argument(
-        "-gt",
-        "--gap_threshold",
-        help="Minimum gap in seconds in a profile to be considered a gap",
-        type=int,
-        default=30,
-    )
-
-    arg_parser.add_argument(
         "-test",
         "--test",
         help="Point to the environment variable key GLIDER_DATA_HOME_TEST for testing.",
