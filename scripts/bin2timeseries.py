@@ -123,8 +123,6 @@ def main(args):
                 search=search,
                 profile_filt_time=profile_filter_time,
                 profile_min_time=min_time,
-                min_samples=min_samples,
-                gap_threshold=gap_threshold,
                 _log=logging,
             )
 
@@ -168,22 +166,6 @@ if __name__ == "__main__":
         help="Minimum profile time in seconds",
         type=int,
         default=120,
-    )
-
-    arg_parser.add_argument(
-        "-ms",
-        "--min_samples",
-        help="Minimum samples to be included in a profile",
-        type=int,
-        default=75,
-    )
-
-    arg_parser.add_argument(
-        "-gt",
-        "--gap_threshold",
-        help="Minimum gap in seconds in a profile to be considered a gap",
-        type=int,
-        default=30,
     )
 
     arg_parser.add_argument(
