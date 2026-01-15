@@ -34,9 +34,14 @@ def main(args):
         copy_delayed_files.main(args)
         print("Done!")
 
-    # convert binary data to raw netcdfs
+    # convert binary data to raw netcdf timeseries
     print("Converting binary data to raw netcdfs...", end=" ", flush=True)
-    bin2timeseries.main(args)
+    raw_dict = bin2timeseries.main(args)
+    print("Done!")
+
+    # run qc on raw netcdfs
+    print("Running qc on raw netcdfs...", end=" ", flush=True)
+    # TODO qc_dict = sbugliderqc.run_qc.main(args, raw_dict)
     print("Done!")
 
     return 0
