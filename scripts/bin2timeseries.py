@@ -34,6 +34,9 @@ def main(args):
     if not os.path.isdir(cacdir):
         logging_base.error(f"cache file directory not found: {cacdir}")
 
+    # init the output dictionary
+    output = {}
+
     if isinstance(deployments_root, str):
 
         for deployment in deployments:
@@ -131,9 +134,13 @@ def main(args):
             logging.info(
                 f"Successfully merged {scicount} science binary files and {flightcount} engineering binary files into {ocount} netcdf timeseries file(s)"
             )
+
+            # save the dataset and outname to the output dictionary
+            output[deployment] = {"outname": outname, "data": ds}
+
         logging.info(f"Finished converting binary files to L0 netcdf files")
 
-        # TODO: return the paths and datasets as a tuple of a list and a dictionary?
+        return output
 
 
 if __name__ == "__main__":
